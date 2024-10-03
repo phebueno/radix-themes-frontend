@@ -41,8 +41,14 @@ const Dashboard: React.FC = () => {
     );
   };
 
-  useEffect(() => {   
-    //there should be a route for a single Theme  
+  const onThemeDelete = async (deletedTheme: Theme) => {
+    setThemes((prevThemes) =>
+      prevThemes.filter((theme) => theme.id !== deletedTheme.id)
+    );
+  };
+
+  useEffect(() => {
+    //there should be a route for a single Theme
     fetchThemes();
   }, []);
 
@@ -55,7 +61,11 @@ const Dashboard: React.FC = () => {
       <h1>Dashboard</h1>
       <h2>Create your theme!</h2>
       <ThemeCreationForm onThemeCreated={fetchThemes} />
-      <ThemeList themes={themes} onThemeUpdate={onThemeUpdate} />
+      <ThemeList
+        themes={themes}
+        onThemeUpdate={onThemeUpdate}
+        onThemeDelete={onThemeDelete}
+      />
     </>
   );
 };

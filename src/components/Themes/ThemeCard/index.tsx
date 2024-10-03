@@ -1,19 +1,28 @@
 import React, { useState } from "react";
 import { Theme } from "../../../pages/Dashboard";
 import api from "../../../services/api";
+import ConfirmDeleteModal from "./ModalDeleteConfirmation";
 
 interface ThemeCardProps {
   theme: Theme;
   onThemeUpdate: (updatedTheme: Theme) => void;
+  onThemeDelete: (deletedTheme: Theme) => void;
 }
 
-const ThemeCard: React.FC<ThemeCardProps> = ({ theme, onThemeUpdate }) => {
+const ThemeCard: React.FC<ThemeCardProps> = ({
+  theme,
+  onThemeUpdate,
+  onThemeDelete,
+}) => {
   const [title, setTitle] = useState<string>(theme.title);
   const [keywords, setKeywords] = useState<string>(theme.keywords);
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
 
-  const updateThemes = async () => {
+  const [isConfirmationModalOpen, setIsConfirmationModalOpen] =
+    useState<boolean>(false);
+
+  const updateTheme = async () => {
     const payload = { title, keywords };
     try {
       const response = await api.put(`/themes/${theme.id}`, payload);
@@ -25,11 +34,28 @@ const ThemeCard: React.FC<ThemeCardProps> = ({ theme, onThemeUpdate }) => {
     }
   };
 
+  const deleteTheme = async () => {
+    try {
+      const response = await api.delete(`/themes/${theme.id}`);
+      return response.data;
+    } catch (err) {
+      console.error("Erro na requisição.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
-    const updatedTheme = await updateThemes();
+    const updatedTheme = await updateTheme();
     onThemeUpdate(updatedTheme);
     setIsEditing(false);
+  };
+
+  const handleDelete = async () => {
+    await deleteTheme();    
+    onThemeDelete(theme);
+    setIsConfirmationModalOpen(false);
   };
 
   return (
@@ -69,7 +95,16 @@ const ThemeCard: React.FC<ThemeCardProps> = ({ theme, onThemeUpdate }) => {
           <p>Keywords: {theme.keywords}</p>
           <p>Status: {theme.status}</p>
           <button onClick={() => setIsEditing(true)}>Atualizar</button>
+          <button onClick={() => setIsConfirmationModalOpen(true)}>
+            Deletar
+          </button>
         </>
+      )}
+      {isConfirmationModalOpen && (
+        <ConfirmDeleteModal
+          onConfirm={handleDelete}
+          onClose={() => setIsConfirmationModalOpen(false)}
+        />
       )}
     </div>
   );
