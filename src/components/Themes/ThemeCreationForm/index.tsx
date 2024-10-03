@@ -1,4 +1,3 @@
-// src/components/CreateThemeForm.tsx
 import React, { useState } from "react";
 import api from "../../../services/api";
 
@@ -14,6 +13,11 @@ const ThemeCreationForm: React.FC<ThemeCreationForm> = ({ onThemeCreated }) => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
+    if (title.length < 3 || keywords.length < 3) {
+      alert("Os campos 'Title' e 'Keywords' devem ter pelo menos 3 caracteres.");
+      setLoading(false);
+      return;
+    }
 
     try {
       const payload = { title, keywords };
@@ -37,6 +41,7 @@ const ThemeCreationForm: React.FC<ThemeCreationForm> = ({ onThemeCreated }) => {
           type="text"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
+          minLength={3}
           required
           disabled={loading}
         />
@@ -48,6 +53,7 @@ const ThemeCreationForm: React.FC<ThemeCreationForm> = ({ onThemeCreated }) => {
           type="text"
           value={keywords}
           onChange={(e) => setKeywords(e.target.value)}
+          minLength={3}
           required
           disabled={loading}
         />
