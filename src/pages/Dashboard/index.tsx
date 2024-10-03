@@ -2,26 +2,7 @@ import { useEffect, useState } from "react";
 import api from "../../services/api";
 import ThemeList from "../../components/Themes/ThemeList";
 import ThemeCreationForm from "../../components/Themes/ThemeCreationForm";
-
-export interface Link {
-  id: string;
-  link: URL;
-}
-
-export enum ThemeStatus {
-  PENDING = "Pending",
-  IN_PROGRESS = "In Progress",
-  COMPLETED = "Completed",
-}
-export interface Theme {
-  id: string;
-  title: string;
-  keywords: string;
-  status: ThemeStatus;
-  links: Link[];
-  createdAt: Date;
-  updatedAt: Date;
-}
+import { Theme } from "../../types/theme.types";
 
 const Dashboard: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
@@ -30,7 +11,6 @@ const Dashboard: React.FC = () => {
   const fetchThemes = async () => {
     try {
       const response = await api.get("/themes");
-      console.log(response.data);
       setThemes(response.data);
     } catch (err) {
       console.error("Erro na requisição.");

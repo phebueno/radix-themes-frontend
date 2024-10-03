@@ -1,6 +1,6 @@
 import React from "react";
 import ThemeCard from "../ThemeCard";
-import { Theme } from "../../../pages/Dashboard";
+import { Theme } from "../../../types/theme.types";
 
 interface ThemeListProps {
   themes: Theme[];

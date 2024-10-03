@@ -1,8 +1,9 @@
 import React, { useState } from "react";
-import { Link, Theme, ThemeStatus } from "../../../pages/Dashboard";
+import { Link, Theme, ThemeStatus } from "../../../types/theme.types";
 import api from "../../../services/api";
 import ConfirmDeleteModal from "./ModalDeleteConfirmation";
 import axios, { AxiosError } from "axios";
+import { useNavigate } from "react-router-dom";
 
 interface ThemeCardProps {
   theme: Theme;
@@ -15,10 +16,11 @@ const ThemeCard: React.FC<ThemeCardProps> = ({
   onThemeUpdate,
   onThemeDelete,
 }) => {
+  const navigate = useNavigate();
+
   const [title, setTitle] = useState<string>(theme.title);
   const [keywords, setKeywords] = useState<string>(theme.keywords);
   const [status, setStatus] = useState<ThemeStatus>(theme.status);
-  const [links, setLinks] = useState<Link[]>(theme.links);
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -53,9 +55,11 @@ const ThemeCard: React.FC<ThemeCardProps> = ({
   const searchTheme = async () => {
     setLoading(true);
     try {
-      const response = await api.get(`/themes/${theme.id}/search-news`);
+      await api.get(`/themes/${theme.id}/search-news`);
       setStatus(ThemeStatus.COMPLETED)
-      return response.data;
+      setTimeout(() => {
+        navigate(`/themes/${theme.id}`);
+      }, 500);
     } catch (err: unknown | AxiosError) {
       {
         if (axios.isAxiosError(err))  {
@@ -65,7 +69,7 @@ const ThemeCard: React.FC<ThemeCardProps> = ({
           }
           else{
             setStatus(ThemeStatus.PENDING);
-            console.warn("Erro na requisição. Tente ajustar seus parâmetros de pesquisa novamente.");
+            console.error("Erro na requisição. Tente ajustar seus parâmetros de pesquisa novamente.");
           }
         } else {
           setStatus(ThemeStatus.IN_PROGRESS)
@@ -92,9 +96,7 @@ const ThemeCard: React.FC<ThemeCardProps> = ({
 
   const onThemeSearch = async () => {
     setStatus(ThemeStatus.IN_PROGRESS);
-    const newsLinks = await searchTheme();
-    setLinks(newsLinks);
-    //timeout, and navigate to page of referred themeId.
+    await searchTheme();
   };
 
   return (
@@ -148,9 +150,19 @@ const ThemeCard: React.FC<ThemeCardProps> = ({
           >
             Deletar
           </button>
-          <button type="button" onClick={onThemeSearch} disabled={loading}>
-            Pesquisar!
-          </button>
+          {status === ThemeStatus.COMPLETED ? (
+            <button
+              type="button"
+              onClick={() => navigate(`/themes/${theme.id}`)}
+              disabled={loading}
+            >
+              Ir para Resultados!
+            </button>
+          ) : (
+            <button type="button" onClick={onThemeSearch} disabled={loading}>
+              Pesquisar!
+            </button>
+          )}
         </>
       )}
       {isConfirmationModalOpen && (
