@@ -1,9 +1,24 @@
 import { useEffect, useState } from "react";
 import api from "../services/api";
+import ThemeList from "../components/ThemeList/ThemeList";
+
+export interface Link {
+  id: string;
+  link: URL;
+}
+export interface Theme {
+  id: string;
+  title: string;
+  keywords: string;
+  status: string;
+  links: Link[];
+  createdAt: Date;
+  updatedAt: Date;
+}
 
 const Dashboard: React.FC = () => {
-  const [loading, setLoading] = useState(true);
-  const [themes, setThemes] = useState();
+  const [loading, setLoading] = useState<boolean>(true);
+  const [themes, setThemes] = useState<Theme[]>([]);
 
   useEffect(() => {
     const fetchTest = async () => {
@@ -20,9 +35,17 @@ const Dashboard: React.FC = () => {
     fetchTest();
   }, []);
 
-    return (
-      <div>Dashboard status: {JSON.stringify(themes)}</div>
-    );
-  };
-  
-  export default Dashboard;
+  if (loading) {
+    return <p>Carregando...</p>;
+  }
+
+  return (
+    <>
+      <h1>Dashboard</h1>
+      <h2>Search</h2>
+      <ThemeList themes={themes} />
+    </>
+  );
+};
+
+export default Dashboard;
