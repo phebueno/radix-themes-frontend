@@ -178,6 +178,7 @@ const ThemeCard: React.FC<ThemeCardProps> = ({
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               disabled={loading}
+              minLength={3}
               required
             />
           </div>
@@ -189,6 +190,7 @@ const ThemeCard: React.FC<ThemeCardProps> = ({
               value={keywords}
               onChange={(e) => setKeywords(e.target.value)}
               disabled={loading}
+              minLength={3}
               required
             />
           </div>
