@@ -33,7 +33,16 @@ const Dashboard: React.FC = () => {
     }
   };
 
-  useEffect(() => {    
+  const onThemeUpdate = async (updatedTheme: Theme) => {
+    setThemes((prevThemes) =>
+      prevThemes.map((theme) =>
+        theme.id === updatedTheme.id ? { ...theme, ...updatedTheme } : theme
+      )
+    );
+  };
+
+  useEffect(() => {   
+    //there should be a route for a single Theme  
     fetchThemes();
   }, []);
 
@@ -46,7 +55,7 @@ const Dashboard: React.FC = () => {
       <h1>Dashboard</h1>
       <h2>Create your theme!</h2>
       <ThemeCreationForm onThemeCreated={fetchThemes} />
-      <ThemeList themes={themes} />
+      <ThemeList themes={themes} onThemeUpdate={onThemeUpdate} />
     </>
   );
 };
