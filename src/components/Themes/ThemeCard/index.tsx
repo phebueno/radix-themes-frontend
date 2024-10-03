@@ -1,6 +1,6 @@
 // src/components/ThemeCard.tsx
 import React from "react";
-import { Theme } from "../../pages/Dashboard";
+import { Theme } from "../../../pages/Dashboard";
 
 interface ThemeCardProps {
   theme: Theme;
