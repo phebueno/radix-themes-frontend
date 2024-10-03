@@ -1,9 +1,10 @@
 import React, { useState } from "react";
-import { Link, Theme, ThemeStatus } from "../../../types/theme.types";
+import { Theme, ThemeStatus } from "../../../types/theme.types";
 import api from "../../../services/api";
 import ConfirmDeleteModal from "./ModalDeleteConfirmation";
 import axios, { AxiosError } from "axios";
 import { useNavigate } from "react-router-dom";
+import showToast from "../../../errors/toastErrors";
 
 interface ThemeCardProps {
   theme: Theme;
@@ -32,9 +33,33 @@ const ThemeCard: React.FC<ThemeCardProps> = ({
     const payload = { title, keywords };
     try {
       const response = await api.put(`/themes/${theme.id}`, payload);
+      showToast({
+        message: "Assunto atualizado com sucesso!",
+        type: "success",
+      });
       return response.data;
     } catch (err) {
-      console.error("Erro na requisição.");
+      if (axios.isAxiosError(err)) {
+        if (err.status === 404) {
+          console.error(err);
+          showToast({
+            message: "Tema não encontrado!",
+            type: "error",
+          });
+        } else {
+          console.error(err);
+          showToast({
+            message: "Erro na requisição. Tente novamente mais tarde.",
+            type: "error",
+          });
+        }
+      } else {
+        console.error("Erro na requisição. Tente novamente mais tarde.");
+        showToast({
+          message: "Erro na requisição. Tente novamente mais tarde.",
+          type: "error",
+        });
+      }
     } finally {
       setLoading(false);
     }
@@ -44,9 +69,33 @@ const ThemeCard: React.FC<ThemeCardProps> = ({
     setLoading(true);
     try {
       const response = await api.delete(`/themes/${theme.id}`);
+      showToast({
+        message: "Assunto deletado com sucesso!",
+        type: "success",
+      });
       return response.data;
     } catch (err) {
-      console.error("Erro na requisição.");
+      if (axios.isAxiosError(err)) {
+        if (err.status === 404) {
+          console.error(err);
+          showToast({
+            message: "Tema não encontrado!",
+            type: "error",
+          });
+        } else {
+          console.error(err);
+          showToast({
+            message: "Erro na requisição. Tente novamente mais tarde.",
+            type: "error",
+          });
+        }
+      } else {
+        console.error("Erro na requisição. Tente novamente mais tarde.");
+        showToast({
+          message: "Erro na requisição. Tente novamente mais tarde.",
+          type: "error",
+        });
+      }
     } finally {
       setLoading(false);
     }
@@ -56,24 +105,42 @@ const ThemeCard: React.FC<ThemeCardProps> = ({
     setLoading(true);
     try {
       await api.get(`/themes/${theme.id}/search-news`);
-      setStatus(ThemeStatus.COMPLETED)
+      setStatus(ThemeStatus.COMPLETED);
+      showToast({
+        message: "Pesquisa concluída! Você será redirecionado em breve.",
+        type: "success",
+      });
       setTimeout(() => {
         navigate(`/themes/${theme.id}`);
-      }, 500);
+      }, 3000);
     } catch (err: unknown | AxiosError) {
       {
-        if (axios.isAxiosError(err))  {
-          if (err.status===403){
-            setStatus(ThemeStatus.COMPLETED)
-            console.error("A pesquisa já foi feita para este Assunto!");
-          }
-          else{
+        if (axios.isAxiosError(err)) {
+          if (err.status === 403) {
+            setStatus(ThemeStatus.COMPLETED);
+            console.error(err);
+            showToast({
+              message: "A pesquisa já foi feita para este Assunto!",
+              type: "error",
+            });
+          } else {
             setStatus(ThemeStatus.PENDING);
-            console.error("Erro na requisição. Tente ajustar seus parâmetros de pesquisa novamente.");
+            console.error(
+              "Erro na requisição. Tente ajustar seus parâmetros de pesquisa novamente."
+            );
+            showToast({
+              message:
+                "Não foram encontrados resultados! Tente ajustar seus parâmetros de pesquisa novamente.",
+              type: "error",
+            });
           }
         } else {
-          setStatus(ThemeStatus.IN_PROGRESS)
+          setStatus(ThemeStatus.IN_PROGRESS);
           console.error("Erro na requisição. Tente novamente mais tarde.");
+          showToast({
+            message: "Erro na requisição. Tente novamente mais tarde.",
+            type: "error",
+          });
         }
       }
     } finally {

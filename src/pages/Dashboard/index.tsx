@@ -3,6 +3,7 @@ import api from "../../services/api";
 import ThemeList from "../../components/Themes/ThemeList";
 import ThemeCreationForm from "../../components/Themes/ThemeCreationForm";
 import { Theme } from "../../types/theme.types";
+import showToast from "../../errors/toastErrors";
 
 const Dashboard: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
@@ -13,7 +14,11 @@ const Dashboard: React.FC = () => {
       const response = await api.get("/themes");
       setThemes(response.data);
     } catch (err) {
-      console.error("Erro na requisição.");
+      console.error("Erro na requisição: ", err);
+      showToast({
+        message: "Não foi possível acessar os assuntos. Tente novamente mais tarde.",
+        type: "error",
+      });
     } finally {
       setLoading(false);
     }
@@ -34,7 +39,6 @@ const Dashboard: React.FC = () => {
   };
 
   useEffect(() => {
-    //there should be a route for a single Theme
     fetchThemes();
   }, []);
 

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import api from "../../../services/api";
+import showToast from "../../../errors/toastErrors";
 
 interface ThemeCreationForm {
   onThemeCreated: () => void;
@@ -14,7 +15,10 @@ const ThemeCreationForm: React.FC<ThemeCreationForm> = ({ onThemeCreated }) => {
     e.preventDefault();
     setLoading(true);
     if (title.length < 3 || keywords.length < 3) {
-      alert("Os campos 'Title' e 'Keywords' devem ter pelo menos 3 caracteres.");
+      showToast({
+        message: "Os campos 'Título' e 'Palavras-chave' devem ter pelo menos 3 caracteres.",
+        type: "warning",
+      });
       setLoading(false);
       return;
     }
@@ -25,8 +29,16 @@ const ThemeCreationForm: React.FC<ThemeCreationForm> = ({ onThemeCreated }) => {
       setTitle("");
       setKeywords("");
       onThemeCreated();
+      showToast({
+        message: "Assunto criado com sucesso!",
+        type: "success",
+      });
     } catch (err) {
       console.error("Erro ao criar tema:", err);
+      showToast({
+        message: "Erro inesperado ao criar o Assunto. Tente novamente mais tarde.",
+        type: "error",
+      });
     } finally {
       setLoading(false);
     }
