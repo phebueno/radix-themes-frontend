@@ -15,7 +15,7 @@ const NewsLinks: React.FC = () => {
   };
 
   useEffect(() => {
-    const fetchTheme = async () => {
+    const fetchThemeLinks = async () => {
       try {
         const response = await api.get(`/themes/${id}`);
         console.log(response.data.newsLinks);
@@ -28,7 +28,7 @@ const NewsLinks: React.FC = () => {
     };
 
     if (id) {
-      fetchTheme();
+      fetchThemeLinks();
     }
   }, [id]);
 
@@ -44,15 +44,25 @@ const NewsLinks: React.FC = () => {
       <button onClick={handleGoBack}>Voltar</button>
       <h1>{theme.title}</h1>
       <ul>
-        {theme.links.map((link) => (
+      {theme.links.map((link) => (
           <li key={link.id}>
-            <a
-              href={link.link.toString()}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              {link.link.toString()}
-            </a>
+            <h2>{link.title}</h2>
+            <p>
+              <strong>Publicado em:</strong> {new Date(link.publishedDate!).toLocaleString()} {/* Formata a data */}
+            </p>
+            <p>
+              <strong>Fonte:</strong> {link.sourceCountry}
+            </p>
+            <img src={link.imgUrl ?? ""} alt={link.title} style={{ maxWidth: "100%", height: "auto" }} /> {/* Exibe a imagem */}
+            <p>
+              <a
+                href={link.link}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Ler mais
+              </a>
+            </p>
           </li>
         ))}
       </ul>
