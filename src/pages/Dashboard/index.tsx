@@ -18,7 +18,6 @@ const Dashboard: React.FC = () => {
     try {
       const url = `/themes?page=${page}&offset=${offset}`;
       const response = await api.get(url);
-      console.log(response)
       setThemes((prevThemes) => [...prevThemes, ...response.data.themes]);
       setPage((prevPage) => prevPage + 1);
       setHasMore(response.data.meta.hasMore);
@@ -72,7 +71,7 @@ const Dashboard: React.FC = () => {
         hasMore={hasMore}
         loader={
           <div className="loader" key={0}>
-            Loading ...
+            Carregando...
           </div>
         }
       >
