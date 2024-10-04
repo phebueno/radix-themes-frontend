@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import api from "../../../services/api";
 import showToast from "../../../errors/toastErrors";
+import { Theme } from "../../../types/theme.types";
 
 interface ThemeCreationForm {
-  onThemeCreated: () => void;
+  onThemeCreate: (newTheme: Theme) => void;
 }
 
-const ThemeCreationForm: React.FC<ThemeCreationForm> = ({ onThemeCreated }) => {
+const ThemeCreationForm: React.FC<ThemeCreationForm> = ({ onThemeCreate }) => {
   const [title, setTitle] = useState<string>("");
   const [keywords, setKeywords] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
@@ -25,10 +26,10 @@ const ThemeCreationForm: React.FC<ThemeCreationForm> = ({ onThemeCreated }) => {
 
     try {
       const payload = { title, keywords };
-      await api.post("/themes", payload);
+      const response = await api.post("/themes", payload);
       setTitle("");
       setKeywords("");
-      onThemeCreated();
+      onThemeCreate(response.data);
       showToast({
         message: "Assunto criado com sucesso!",
         type: "success",
