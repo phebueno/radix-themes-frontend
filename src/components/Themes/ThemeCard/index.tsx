@@ -5,6 +5,7 @@ import ConfirmDeleteModal from "./ModalDeleteConfirmation";
 import axios, { AxiosError } from "axios";
 import { useNavigate } from "react-router-dom";
 import showToast from "../../../errors/toastErrors";
+import { statusColorMap, translateThemeStatus } from "../../../utils/helpers";
 
 interface ThemeCardProps {
   theme: Theme;
@@ -167,11 +168,13 @@ const ThemeCard: React.FC<ThemeCardProps> = ({
   };
 
   return (
-    <div>
+    <div className="bg-gray-800 p-4 rounded-lg shadow-md mb-4">
       {isEditing ? (
-        <form onSubmit={handleUpdate}>
+        <form onSubmit={handleUpdate} className="flex flex-col space-y-4">
           <div>
-            <label htmlFor="status">Title:</label>
+            <label htmlFor="title" className="text-sm font-semibold">
+              Assunto:
+            </label>
             <input
               id="title"
               type="text"
@@ -180,10 +183,13 @@ const ThemeCard: React.FC<ThemeCardProps> = ({
               disabled={loading}
               minLength={3}
               required
+              className="mt-1 block w-full bg-gray-700 border border-gray-600 rounded-lg p-2 focus:outline-none focus:ring focus:ring-blue-500"
             />
           </div>
           <div>
-            <label htmlFor="keywords">Keywords:</label>
+            <label htmlFor="keywords" className="text-sm font-semibold">
+              Palavras-chave:
+            </label>
             <input
               id="keywords"
               type="text"
@@ -192,47 +198,73 @@ const ThemeCard: React.FC<ThemeCardProps> = ({
               disabled={loading}
               minLength={3}
               required
+              className="mt-1 block w-full bg-gray-700 border border-gray-600 rounded-lg p-2 focus:outline-none focus:ring focus:ring-blue-500"
             />
           </div>
-          <button type="submit" disabled={loading}>
-            Salvar
-          </button>
-          <button
-            type="button"
-            onClick={() => setIsEditing(false)}
-            disabled={loading}
-          >
-            Cancelar
-          </button>
-        </form>
-      ) : (
-        <>
-          <h3>{title}</h3>
-          <p>Keywords: {keywords}</p>
-          <p>Status: {status}</p>
-          <button onClick={() => setIsEditing(true)} disabled={loading}>
-            Atualizar
-          </button>
-          <button
-            onClick={() => setIsConfirmationModalOpen(true)}
-            disabled={loading}
-          >
-            Deletar
-          </button>
-          {status === ThemeStatus.COMPLETED ? (
+          <div className="flex justify-end space-x-2">
             <button
               type="button"
-              onClick={() => navigate(`/themes/${theme.id}`)}
+              onClick={() => setIsEditing(false)}
               disabled={loading}
+              className="bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-500 transition"
             >
-              Ir para Resultados!
+              Cancelar
             </button>
-          ) : (
-            <button type="button" onClick={onThemeSearch} disabled={loading}>
-              Pesquisar!
+            <button
+              type="submit"
+              disabled={loading}
+              className="bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-500 transition"
+            >
+              Atualizar
             </button>
-          )}
-        </>
+          </div>
+        </form>
+      ) : (
+        <div>
+          <h3 className="text-white font-bold">{title}</h3>
+          <p className="text-gray-400">Palavras-chave: {keywords}</p>
+          <p className="text-gray-400">
+            Status:{" "}
+            <span className={statusColorMap[status]}>
+              {translateThemeStatus(status)}
+            </span>
+          </p>
+          <div className="flex justify-end space-x-2 mt-4">
+            <button
+              onClick={() => setIsEditing(true)}
+              disabled={loading}
+              className="bg-yellow-600 text-white py-2 px-4 rounded-lg hover:bg-yellow-500 transition"
+            >
+              Editar
+            </button>
+            <button
+              onClick={() => setIsConfirmationModalOpen(true)}
+              disabled={loading}
+              className="bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-500 transition"
+            >
+              Deletar
+            </button>
+            {status === ThemeStatus.COMPLETED ? (
+              <button
+                type="button"
+                onClick={() => navigate(`/themes/${theme.id}`)}
+                disabled={loading}
+                className="bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-500 transition"
+              >
+                Ir para Resultados!
+              </button>
+            ) : (
+              <button
+                type="button"
+                onClick={onThemeSearch}
+                disabled={loading}
+                className="bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-500 transition"
+              >
+                Pesquisar Assunto...
+              </button>
+            )}
+          </div>
+        </div>
       )}
       {isConfirmationModalOpen && (
         <ConfirmDeleteModal
