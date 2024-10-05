@@ -1,6 +1,11 @@
 # RadixThemes UI
 O RadixThemes é um serviço para pesquisa de assuntos e de palavras que possam ser de seu interesse. Este é a parte relativa ao tela de aplicação, e a parte de back-end do serviço está disponível em: https://github.com/phebueno/radix-themes-backend.
 
+<p align="center">
+  <img src="themes.PNG?raw=true" width="450" alt="themes page"/>
+  <img src="links.PNG?raw=true" width="450" alt="links page"/>
+</p>
+
 ## Sobre
 Esta é uma aplicação que dispõe de duas telas: uma para cadastro e visualização de Assuntos, e a outra para visualização de Links associados. Após o cadastro de um assunto, o mesmo pode tentar realizar a pesquisa, que é enviada posteriormente para a API da GDELT 2.0 API, cuja documentação está disponível em https://blog.gdeltproject.org/gdelt-doc-2-0-api-debuts/. Quando bem sucedida a pesquisa, o usuário tem a opção de visualizar as notícias relacionadas à sua pesquisa. Tanto a página de visualização de Assuntos quanto de Links conta com paginação infinita, o que auxília na usabilidade do usuário!
 
