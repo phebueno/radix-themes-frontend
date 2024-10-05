@@ -14,7 +14,7 @@ const ThemeList: React.FC<ThemeListProps> = ({ themes, onThemeUpdate, onThemeDel
       {themes.length > 0 ? (
         themes.map((theme) => <ThemeCard key={theme.id} theme={theme} onThemeUpdate={onThemeUpdate} onThemeDelete={onThemeDelete}/>)
       ) : (
-        <p>Nenhum tema encontrado.</p>
+        <p>Nenhum Assunto encontrado.</p>
       )}
     </>
   );

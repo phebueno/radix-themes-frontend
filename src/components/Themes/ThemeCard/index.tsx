@@ -45,7 +45,7 @@ const ThemeCard: React.FC<ThemeCardProps> = ({
         if (err.status === 404) {
           console.error(err);
           showToast({
-            message: "Tema não encontrado!",
+            message: "Assunto não encontrado!",
             type: "error",
           });
         } else {
@@ -81,7 +81,7 @@ const ThemeCard: React.FC<ThemeCardProps> = ({
         if (err.status === 404) {
           console.error(err);
           showToast({
-            message: "Tema não encontrado!",
+            message: "Assunto não encontrado!",
             type: "error",
           });
         } else {

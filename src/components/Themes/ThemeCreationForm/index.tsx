@@ -37,7 +37,7 @@ const ThemeCreationForm: React.FC<ThemeCreationForm> = ({ onThemeCreate }) => {
         type: "success",
       });
     } catch (err) {
-      console.error("Erro ao criar tema:", err);
+      console.error("Erro ao criar Assunto:", err);
       showToast({
         message:
           "Erro inesperado ao criar o Assunto. Tente novamente mais tarde.",

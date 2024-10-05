@@ -27,7 +27,7 @@ const NewsLinks: React.FC = () => {
       setPage((prevPage) => prevPage + 1);
       setHasMore(response.data.meta.hasMore);
     } catch (err) {
-      console.error("Erro ao carregar tema:", err);
+      console.error("Erro ao carregar Assunto:", err);
     } finally {
       setLoading(false);
     }
