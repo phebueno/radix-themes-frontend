@@ -4,7 +4,8 @@ import ThemeList from "../../components/Themes/ThemeList";
 import ThemeCreationForm from "../../components/Themes/ThemeCreationForm";
 import { Theme } from "../../types/theme.types";
 import showToast from "../../errors/toastErrors";
-import InfiniteScroll from "react-infinite-scroller";
+import InfiniteScroll from 'react-infinite-scroll-component';
+import LoadingWidget from "../../components/LoadingWidget";
 
 const Dashboard: React.FC = () => {
   const [themes, setThemes] = useState<Theme[]>([]);
@@ -61,7 +62,6 @@ const Dashboard: React.FC = () => {
       <div className="min-h-screen bg-gray-900 text-gray-100 flex flex-col items-center">
         <header className="w-full flex flex-col items-center justify-start py-8">
           {" "}
-          {/* Ajuste aqui */}
           <h1 className="text-5xl font-bold mb-4">RadixThemes</h1>
           <h2 className="text-2xl font-semibold text-gray-400">
             Se informe sobre o seu <span className="font-bold">Assunto</span>{" "}
@@ -71,16 +71,17 @@ const Dashboard: React.FC = () => {
         <main className="w-full max-w-lg px-4">
           <ThemeCreationForm onThemeCreate={onThemeCreate} />
           <InfiniteScroll
-            pageStart={page}
-            loadMore={() => {
+            dataLength={themes.length}
+            next={() => {
               if (!loading) {
                 fetchThemes();
               }
             }}
+            style={{ overflow: 'hidden' }}
             hasMore={hasMore}
             loader={
-              <div className="loader" key={0}>
-                Carregando...
+              <div className="relative loader" key={0}>
+                <LoadingWidget />
               </div>
             }
           >
