@@ -1,10 +1,14 @@
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import NewsLinks from "./pages/NewsLinks";
 import Dashboard from "./pages/Dashboard";
-import "./App.css";
 import { ToastContainer } from "react-toastify";
+import { useEffect } from "react";
 
 function App() {
+  useEffect(() => {
+    document.documentElement.classList.add('dark');
+  }, []);
+
   return (
     <Router>
       <Routes>

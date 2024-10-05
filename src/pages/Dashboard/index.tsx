@@ -58,29 +58,40 @@ const Dashboard: React.FC = () => {
 
   return (
     <>
-      <h1>Dashboard</h1>
-      <h2>Create your theme!</h2>
-      <ThemeCreationForm onThemeCreate={onThemeCreate} />
-      <InfiniteScroll
-        pageStart={page}
-        loadMore={() => {
-          if (!loading) {
-            fetchThemes();
-          }
-        }}
-        hasMore={hasMore}
-        loader={
-          <div className="loader" key={0}>
-            Carregando...
-          </div>
-        }
-      >
-        <ThemeList
-          themes={themes}
-          onThemeUpdate={onThemeUpdate}
-          onThemeDelete={onThemeDelete}
-        />
-      </InfiniteScroll>
+      <div className="min-h-screen bg-gray-900 text-gray-100 flex flex-col items-center">
+        <header className="w-full flex flex-col items-center justify-start py-8">
+          {" "}
+          {/* Ajuste aqui */}
+          <h1 className="text-5xl font-bold mb-4">RadixThemes</h1>
+          <h2 className="text-2xl font-semibold text-gray-400">
+            Se informe sobre o seu <span className="font-bold">Assunto</span>{" "}
+            predileto!
+          </h2>
+        </header>
+        <main className="w-full max-w-lg px-4">
+          <ThemeCreationForm onThemeCreate={onThemeCreate} />
+          <InfiniteScroll
+            pageStart={page}
+            loadMore={() => {
+              if (!loading) {
+                fetchThemes();
+              }
+            }}
+            hasMore={hasMore}
+            loader={
+              <div className="loader" key={0}>
+                Carregando...
+              </div>
+            }
+          >
+            <ThemeList
+              themes={themes}
+              onThemeUpdate={onThemeUpdate}
+              onThemeDelete={onThemeDelete}
+            />
+          </InfiniteScroll>
+        </main>
+      </div>
     </>
   );
 };
