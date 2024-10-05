@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Link, Theme } from "../../types/theme.types";
 import api from "../../services/api";
-import InfiniteScroll from "react-infinite-scroller";
+import InfiniteScroll from "react-infinite-scroll-component";
+import LoadingWidget from "../../components/LoadingWidget";
 
 const NewsLinks: React.FC = () => {
   const navigate = useNavigate();
@@ -39,16 +40,46 @@ const NewsLinks: React.FC = () => {
   }, [id]);
 
   if (!theme && !loading) {
-    return <h2>Tema não encontrado.</h2>;
+    return (
+      <div className="relative min-h-screen bg-gray-900 text-gray-100 flex flex-col items-center justify-center">
+        <button
+          onClick={handleGoBack}
+          className="fixed top-4 left-4 text-lg font-medium bg-gray-800 text-gray-100 px-4 py-2 rounded shadow hover:bg-gray-700"
+        >
+          Voltar
+        </button>
+        <h1 className="text-4xl font-bold mb-4">404</h1>
+        <h2 className="text-2xl">Assunto não encontrado!</h2>
+      </div>
+    );
   }
+
+  if (!theme && loading) {
+    return (
+      <div className="relative min-h-screen bg-gray-900 text-gray-100 flex flex-col items-center justify-center">
+        <LoadingWidget />
+      </div>
+    );
+  }
+
   return (
-    <div>
-      <button onClick={handleGoBack}>Voltar</button>
-      <h1>{theme && theme.title}</h1>
-      <ul>
+    <div className="min-h-screen bg-gray-900 text-gray-100 flex flex-col items-center">
+      <header className="w-full flex flex-col items-center justify-start py-8">
+        <button
+          onClick={handleGoBack}
+          className="fixed top-4 left-4 text-lg font-medium bg-gray-800 text-gray-100 px-4 py-2 rounded shadow hover:bg-gray-700"
+        >
+          Voltar
+        </button>
+        <h1 className="text-4xl font-bold mb-4">{theme && theme.title}</h1>
+        <h2 className="text-2xl font-semibold text-gray-400">
+          Palavras-chave: {theme && theme.keywords}
+        </h2>
+      </header>
+      <main className="w-full max-w-6xl px-4">
         <InfiniteScroll
-          pageStart={page}
-          loadMore={() => {
+          dataLength={links.length}
+          next={() => {
             if (!loading) {
               fetchThemeLinks();
             }
@@ -62,29 +93,45 @@ const NewsLinks: React.FC = () => {
         >
           {links &&
             links.map((link) => (
-              <li key={link.id}>
-                <h2>{link.title}</h2>
-                <p>
-                  <strong>Publicado em:</strong>
-                  {new Date(link.publishedDate!).toLocaleString()}
-                </p>
-                <p>
-                  <strong>Fonte:</strong> {link.sourceCountry}
-                </p>
-                <img
-                  src={link.imgUrl ?? ""}
-                  alt={link.title}
-                  style={{ maxWidth: "100%", height: "auto" }}
-                />{" "}
-                <p>
-                  <a href={link.link} target="_blank" rel="noopener noreferrer">
-                    Ler mais
-                  </a>
-                </p>
-              </li>
+              <div
+                key={link.id}
+                className="bg-gray-800 p-6 rounded-lg shadow-lg flex flex-col mb-4"
+              >
+                <div className="flex flex-grow">
+                  <img
+                    src={link.imgUrl ?? ""}
+                    alt={link.title}
+                    className="w-1/3 h-auto rounded-md object-cover mr-6"
+                  />
+                  <div className="flex-grow flex flex-col justify-between">
+                    <div>
+                      <h2 className="text-xl font-semibold mb-2">
+                        {link.title}
+                      </h2>
+                      <p className="mb-2">
+                        <strong>Publicado em:</strong>{" "}
+                        {new Date(link.publishedDate!).toLocaleString()}
+                      </p>
+                      <p className="mb-2">
+                        <strong>Fonte:</strong> {link.sourceCountry}
+                      </p>
+                    </div>
+                    <p className="mt-4">
+                      <a
+                        href={link.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-blue-400 hover:underline text-lg"
+                      >
+                        Ler mais
+                      </a>
+                    </p>
+                  </div>
+                </div>
+              </div>
             ))}
         </InfiniteScroll>
-      </ul>
+      </main>
     </div>
   );
 };
