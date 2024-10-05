@@ -6,6 +6,7 @@ import axios, { AxiosError } from "axios";
 import { useNavigate } from "react-router-dom";
 import showToast from "../../../errors/toastErrors";
 import { statusColorMap, translateThemeStatus } from "../../../utils/helpers";
+import LoadingWidget from "../../LoadingWidget";
 
 interface ThemeCardProps {
   theme: Theme;
@@ -213,9 +214,9 @@ const ThemeCard: React.FC<ThemeCardProps> = ({
             <button
               type="submit"
               disabled={loading}
-              className="bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-500 transition"
+              className="relative bg-blue-600 min-w-32 text-white py-2 px-4 rounded-lg hover:bg-blue-500 transition"
             >
-              Atualizar
+              {!loading ? "Atualizar" : <LoadingWidget />}
             </button>
           </div>
         </form>
@@ -258,9 +259,9 @@ const ThemeCard: React.FC<ThemeCardProps> = ({
                 type="button"
                 onClick={onThemeSearch}
                 disabled={loading}
-                className="bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-500 transition"
+                className="relative bg-blue-600 min-w-52 text-white py-2 px-4 rounded-lg hover:bg-blue-500 transition"
               >
-                Pesquisar Assunto...
+                {!loading ? "Pesquisar Assunto...." : <LoadingWidget />}
               </button>
             )}
           </div>

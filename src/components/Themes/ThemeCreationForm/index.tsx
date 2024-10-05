@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import api from "../../../services/api";
 import showToast from "../../../errors/toastErrors";
 import { Theme } from "../../../types/theme.types";
+import LoadingWidget from "../../LoadingWidget";
 
 interface ThemeCreationForm {
   onThemeCreate: (newTheme: Theme) => void;
@@ -86,10 +87,10 @@ const ThemeCreationForm: React.FC<ThemeCreationForm> = ({ onThemeCreate }) => {
       <div className="flex justify-end mt-4">
         {" "}
         <button
-          className="bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-500 transition duration-200 ease-in-out" // Suaviza a cor e transição
+          className="relative bg-blue-600 min-h-10 min-w-32 text-white py-2 px-4 rounded-md hover:bg-blue-500 transition duration-200 ease-in-out" // Suaviza a cor e transição
           type="submit"
         >
-          {loading ? "Criando..." : "Criar Assunto"}
+          {!loading ? "Criar Assunto" : <LoadingWidget />}
         </button>
       </div>
     </form>
